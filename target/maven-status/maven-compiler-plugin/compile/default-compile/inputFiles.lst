@@ -1,1 +1,5 @@
 /Users/nikhil/repos/inventory-service/src/main/java/com/example/inventory/InventoryServiceApplication.java
+/Users/nikhil/repos/inventory-service/src/main/java/com/example/inventory/domain/event/ProductCreated.java
+/Users/nikhil/repos/inventory-service/src/main/java/com/example/inventory/domain/event/QuantityAdjusted.java
+/Users/nikhil/repos/inventory-service/src/main/java/com/example/inventory/domain/model/Product.java
+/Users/nikhil/repos/inventory-service/src/main/java/com/example/inventory/domain/model/ProductId.java
