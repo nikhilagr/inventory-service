@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,6 +25,20 @@ public class GlobalExceptionHandler {
   public ProblemDetail handleNotFound(NoSuchElementException ex) {
     var detail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     detail.setTitle("Not Found");
+    return detail;
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ProblemDetail handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+    Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream()
+        .collect(Collectors.toMap(
+            FieldError::getField,
+            fe -> fe.getDefaultMessage() != null ? fe.getDefaultMessage() : "invalid",
+            (a, b) -> a + "; " + b));
+
+    var detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
+    detail.setTitle("Bad Request");
+    detail.setProperty("errors", errors);
     return detail;
   }
 
