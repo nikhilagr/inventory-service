@@ -54,7 +54,13 @@ public class ProductApplicationService {
   }
 
   public ProductResponse getById(String id) {
-    var productId = ProductId.of(UUID.fromString(id));
+    UUID uuid;
+    try {
+      uuid = UUID.fromString(id);
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException("Invalid product ID format: " + id);
+    }
+    var productId = ProductId.of(uuid);
     return productRepository.findById(productId)
         .map(ProductResponse::from)
         .orElseThrow(() -> new NoSuchElementException("Product not found: " + id));
