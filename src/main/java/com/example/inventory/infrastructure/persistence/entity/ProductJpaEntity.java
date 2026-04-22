@@ -27,7 +27,7 @@ public class ProductJpaEntity {
   @Column(nullable = false, precision = 19, scale = 4)
   private BigDecimal price;
 
-  @Column(name = "created_at", nullable = false, updatable = false)
+  @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "timestamp")
   private Instant createdAt;
 
   protected ProductJpaEntity() {}
