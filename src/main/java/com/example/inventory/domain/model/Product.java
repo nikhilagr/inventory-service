@@ -25,6 +25,11 @@ public class Product {
     this.price = price;
   }
 
+  // Rehydration factory — skips invariant checks and event emission; for DB mapping only.
+  public static Product reconstitute(ProductId id, String name, String sku, int quantity, BigDecimal price) {
+    return new Product(id, name, sku, quantity, price);
+  }
+
   public static Product create(String name, String sku, int quantity, BigDecimal price) {
     if (name == null || name.isBlank()) {
       throw new IllegalArgumentException("Product name must not be blank");
