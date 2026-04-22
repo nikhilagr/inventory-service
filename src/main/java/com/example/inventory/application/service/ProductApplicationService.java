@@ -32,11 +32,11 @@ public class ProductApplicationService {
     }
 
     var product = Product.create(cmd.name(), cmd.sku(), cmd.quantity(), cmd.price());
-    var saved = productRepository.save(product);
+    productRepository.save(product);
 
-    saved.pullDomainEvents().forEach(event -> log.info("Domain event: {}", event));
+    product.pullDomainEvents().forEach(event -> log.info("Domain event: {}", event));
 
-    return ProductResponse.from(saved);
+    return ProductResponse.from(product);
   }
 
   @Transactional
@@ -46,11 +46,11 @@ public class ProductApplicationService {
         .orElseThrow(() -> new NoSuchElementException("Product not found: " + cmd.productId()));
 
     product.adjustQuantity(cmd.delta());
-    var saved = productRepository.save(product);
+    productRepository.save(product);
 
-    saved.pullDomainEvents().forEach(event -> log.info("Domain event: {}", event));
+    product.pullDomainEvents().forEach(event -> log.info("Domain event: {}", event));
 
-    return ProductResponse.from(saved);
+    return ProductResponse.from(product);
   }
 
   public ProductResponse getById(String id) {
