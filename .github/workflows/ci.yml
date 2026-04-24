@@ -85,3 +85,29 @@ jobs:
         run: |
           docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
           docker push ghcr.io/${{ github.repository }}:latest
+
+  update-deploy-repo:
+    runs-on: ubuntu-latest
+    needs: docker-build-and-push
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout deploy repo
+        uses: actions/checkout@v4
+        with:
+          repository: nikhilagr/inventory-service-deploy
+          token: ${{ secrets.DEPLOY_REPO_TOKEN }}
+          path: deploy-repo
+
+      - name: Update image tag
+        run: |
+          sed -i 's|image: ghcr.io/nikhilagr/inventory-service:.*|image: ghcr.io/nikhilagr/inventory-service:${{ github.sha }}|' deploy-repo/manifests/deployment.yml
+
+      - name: Commit and push
+        run: |
+          cd deploy-repo
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add manifests/deployment.yml
+          git commit -m "chore: update image to ${{ github.sha }}"
+          git push
