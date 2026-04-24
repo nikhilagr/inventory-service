@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: inventory-config
+  namespace: inventory
+data:
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-postgresql.inventory.svc.cluster.local:5432/inventory_dev
+  SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+  SPRING_FLYWAY_ENABLED: "true"
+  LOGGING_LEVEL_COM_EXAMPLE_INVENTORY: DEBUG
